@@ -1,5 +1,4 @@
 # Proiect ip
 
 
-vezi [[Architecture/Architecture.md|Arhitectura]]
-
+vezi [Arhitectura](./Architecture/Architecture.md)

@@ -1,8 +1,5 @@
 # Arhitectura
 
-## Diagrame UML
-
-
 ```mermaid
 graph TB
     subgraph Client_Side [Client]
@@ -34,6 +31,10 @@ graph TB
 ```
 
 ---
+
+## Diagrame UML
+
+
 
 ### Diagrama de secventa autentificare 
 ```mermaid
@@ -117,4 +118,4 @@ stateDiagram-v2
     
     PermissionError --> [*]
 ```
-vezi [[Database.md|Baza de date]]
+vezi  [Baza de date](Database.md)
