@@ -33,4 +33,4 @@ USER_DOCUMENT-> face legatura intre document in sine si user. detine permisiunil
 DOCUMENT-> reprezinta documentul in sine
 
 
-[[Architecture.md|Inapoi]]
+ [Inapoi](Architecture.md)
