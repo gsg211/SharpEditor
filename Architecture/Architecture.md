@@ -27,7 +27,6 @@ graph TB
 
     DocController <--> Repo
     Repo <--> DB
-
 ```
 
 ---
