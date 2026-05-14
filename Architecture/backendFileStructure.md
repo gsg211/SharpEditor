@@ -35,7 +35,7 @@ src/
 ├── Infrastructure/
 │   ├── Data/
 │   │   ├── MyDbContext.cs
-│   ├── Repositories/
+│   ├── Repositories/   
 │   │   ├── UserRepository.cs
 │   │   ├── DocumentRepository.cs
 │   │   ├── SharedDocumentRepository.cs
