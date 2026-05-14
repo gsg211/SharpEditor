@@ -11,17 +11,4 @@
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Src\Api\Controllers\" />
-      <Folder Include="Src\Api\DTOs\" />
-      <Folder Include="Src\Api\Middleware\" />
-      <Folder Include="Src\Common\Exceptions\" />
-      <Folder Include="Src\Core\Entities\" />
-      <Folder Include="Src\Core\Interfaces\" />
-      <Folder Include="Src\Core\Services\" />
-      <Folder Include="Src\Infrastructure\Data\" />
-      <Folder Include="Src\Infrastructure\Repositories\" />
-      <Folder Include="Src\Infrastructure\Security\" />
-    </ItemGroup>
-
 </Project>
