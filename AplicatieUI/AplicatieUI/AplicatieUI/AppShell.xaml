@@ -15,5 +15,12 @@
         Title="Register"
         ContentTemplate="{DataTemplate ui:RegisterPage}"
         Route="RegisterPage" />
+    
+    <ShellContent
+        Title="Documents"
+        ContentTemplate="{DataTemplate ui:DocumentListPage}"
+        Route="DocumentListPage" />
+
+    
 
 </Shell>

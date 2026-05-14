@@ -26,9 +26,11 @@ public partial class LoginPage : ContentPage
         SetLoading(false);
 
         // TODO: dupa ce primesti JWT-ul, navigheaza catre DocumentListPage:
-        // await Shell.Current.GoToAsync("//DocumentListPage");
+        
+        
+        await Shell.Current.GoToAsync("///DocumentListPage");
 
-        ShowSuccess("Login successful! (TODO: connect to API)");
+        
     }
 
     private async void OnSignUpTapped(object sender, TappedEventArgs e)
