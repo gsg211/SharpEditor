@@ -3,5 +3,7 @@
 namespace BackEnd.business.interfaces;
 
 public interface IDocumentRepository : IRepository<Document> {
-    Task<IEnumerable<Document>> GetDocumentsByAuthorIdAsync(int authorId);
+    Task<IEnumerable<Document>> GetDocumentsByOwnerIdAsync(int ownerId);
+    new void Remove(Document entity);
+
 }

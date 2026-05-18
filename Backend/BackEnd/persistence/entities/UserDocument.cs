@@ -6,7 +6,7 @@ public enum SharePermission
 {
     Owner,
     ReadOnly,
-    OwnerReadOnly,
+    ReadWrite,
 }
 [PrimaryKey(nameof(UserId),nameof(DocumentId))]
 public class UserDocument

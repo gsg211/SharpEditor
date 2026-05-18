@@ -1,0 +1,49 @@
+using System.Security.Cryptography;
+using System.Text;
+
+namespace BackEnd.business.Security;
+
+public interface IPasswordHasher
+{
+    string Hash(string password);
+    bool Verify(string password, string hash);
+}
+
+public class PasswordHasher : IPasswordHasher
+{
+    private const int SaltSize   = 16;
+    private const int HashSize   = 32;
+    private const int Iterations = 100_000;
+
+    public string Hash(string password)
+    {
+        var salt = RandomNumberGenerator.GetBytes(SaltSize);
+        var hash = Rfc2898DeriveBytes.Pbkdf2(
+            Encoding.UTF8.GetBytes(password),
+            salt,
+            Iterations,
+            HashAlgorithmName.SHA256,
+            HashSize);
+
+        // format:  base64(salt):base64(hash)
+        return $"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}";
+    }
+
+    public bool Verify(string password, string storedHash)
+    {
+        var parts = storedHash.Split(':');
+        if (parts.Length != 2) return false;
+
+        var salt         = Convert.FromBase64String(parts[0]);
+        var expectedHash = Convert.FromBase64String(parts[1]);
+
+        var actualHash = Rfc2898DeriveBytes.Pbkdf2(
+            Encoding.UTF8.GetBytes(password),
+            salt,
+            Iterations,
+            HashAlgorithmName.SHA256,
+            HashSize);
+
+        return CryptographicOperations.FixedTimeEquals(actualHash, expectedHash);
+    }
+}
