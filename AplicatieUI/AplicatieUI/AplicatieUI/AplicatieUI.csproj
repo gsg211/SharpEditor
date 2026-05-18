@@ -43,10 +43,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Logica\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <MauiXaml Update="UI\DocumentEditorPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

@@ -1,20 +1,38 @@
-﻿namespace AplicatieUI.UI;
+﻿using AplicatieUI.Logica.Command;
+using AplicatieUI.Logica.Documente;
+using System.Collections.ObjectModel;
+
+namespace AplicatieUI.UI;
 
 public partial class DocumentListPage : ContentPage
 {
-    public class DocumentItem
-    {
-        public Guid ShareId { get; set; }
-        public string Title { get; set; } = "";
-        public string UpdatedAt { get; set; } = "";
-        public string Permission { get; set; } = "";
-    }
+    private ManagerDocument _manager;
+    private Document? _selectedDocument;
+    private NewButton _newButton;
+    private DeleteButton _deleteButton;
 
-    private DocumentItem? _selectedDocument;
-
+   private ObservableCollection<Document> documente = [];
     public DocumentListPage()
     {
         InitializeComponent();
+
+
+        _manager = new ManagerDocument(documente);
+
+
+
+        //Inlocuit cu apel API
+        Document doc1 = new Document("d1", "Test1", "All");
+        Document doc2 = new Document("d2", "Test2", "All");
+        Document doc3 = new Document("d3", "Test3", "All");
+
+        documente.Add(doc1);
+        documente.Add(doc2);
+        documente.Add(doc3);
+
+        _newButton = new NewButton(_manager);
+        _deleteButton = new DeleteButton(_manager);
+
         LoadDocuments();
     }
 
@@ -23,38 +41,18 @@ public partial class DocumentListPage : ContentPage
         // TODO: inlocuieste cu apelul real catre ApiService.GetSharedDocs()
         // GET /shared-docs
 
-        var documente = new List<DocumentItem>
-        {
-            new DocumentItem
-            {
-                ShareId = Guid.NewGuid(),
-                Title = "Proiect IP",
-                UpdatedAt = "Updated 10 min ago",
-                Permission = "Owner"
-            },
-            new DocumentItem
-            {
-                ShareId = Guid.NewGuid(),
-                Title = "Notite curs",
-                UpdatedAt = "Updated 2 hours ago",
-                Permission = "ReadWrite"
-            },
-            new DocumentItem
-            {
-                ShareId = Guid.NewGuid(),
-                Title = "Document partajat",
-                UpdatedAt = "Updated yesterday",
-                Permission = "ReadOnly"
-            }
-        };
+        
 
-        DocumentsCollection.ItemsSource = documente;
-        SubtitleLabel.Text = $"{documente.Count} documents";
+
+        
+
+        DocumentsCollection.ItemsSource = _manager.Documents;
+        SubtitleLabel.Text = $"{documente.Count} manager.Documents";
     }
 
     private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        _selectedDocument = e.CurrentSelection.FirstOrDefault() as DocumentItem;
+        _selectedDocument = e.CurrentSelection.FirstOrDefault() as Document;
 
         // Activeaza/dezactiveaza butoanele in functie de selectie
         bool areSelected = _selectedDocument != null;
@@ -78,16 +76,8 @@ public partial class DocumentListPage : ContentPage
 
     private async void OnNewDocumentClicked(object sender, EventArgs e)
     {
-        var editor = new DocumentEditorPage();
-        editor.LoadDocument(
-            Guid.Empty,
-            "New Document",
-            "",
-            "Owner",
-            1
-        );
-
-        await Navigation.PushAsync(editor);
+        _newButton.Execute();
+        LoadDocuments();
     }
 
 
@@ -95,12 +85,14 @@ public partial class DocumentListPage : ContentPage
     {
         if (_selectedDocument == null) return;
 
+        Guid shar = Guid.Empty;
+
         var editor = new DocumentEditorPage();
         editor.LoadDocument(
-            _selectedDocument.ShareId,
-            _selectedDocument.Title,
-            "Continut de test...",
-            _selectedDocument.Permission,
+            shar,
+            _selectedDocument.Titlu,
+            _selectedDocument.Text,
+            "All",
             1
         );
 
@@ -113,13 +105,19 @@ public partial class DocumentListPage : ContentPage
 
         bool confirmat = await DisplayAlert(
             "Delete Document",
-            $"Esti sigur ca vrei sa stergi '{_selectedDocument.Title}'?",
+            $"Esti sigur ca vrei sa stergi '{_selectedDocument.Titlu}'?",
             "Delete", "Cancel");
 
         if (!confirmat) return;
 
         // TODO: apel real catre ApiService.DeleteSharedDoc(_selectedDocument.ShareId)
         // DELETE /shared-docs/{shareId}
+
+        if (confirmat)
+        {
+            _deleteButton.DocumentToDelete = _selectedDocument;
+            _deleteButton.Execute();
+        }
 
         LoadDocuments();
         _selectedDocument = null;

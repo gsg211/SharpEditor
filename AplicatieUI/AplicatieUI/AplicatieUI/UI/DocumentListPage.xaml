@@ -75,12 +75,12 @@
                         <Grid ColumnDefinitions="*,Auto">
                             <VerticalStackLayout Grid.Column="0" Spacing="3">
                                 <Label
-                                    Text="{Binding Title}"
+                                    Text="{Binding Titlu}"
                                     FontSize="15"
                                     FontAttributes="Bold"
                                     TextColor="#E8E8F0"/>
                                 <Label
-                                    Text="{Binding UpdatedAt}"
+                                    Text="{Binding DataAndTime}"
                                     FontSize="12"
                                     TextColor="#6B6B80"/>
                             </VerticalStackLayout>

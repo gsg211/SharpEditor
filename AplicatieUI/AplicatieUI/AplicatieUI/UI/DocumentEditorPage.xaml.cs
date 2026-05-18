@@ -1,23 +1,32 @@
-﻿namespace AplicatieUI.UI;
+﻿using AplicatieUI.Logica.Command;
+using AplicatieUI.Logica.Memento;
+using System;
+using System.Data;
+
+namespace AplicatieUI.UI;
 
 public partial class DocumentEditorPage : ContentPage
 {
-    private Guid _shareId;
-    private int _currentVersion = 1;
-    private string _lastSavedContent = "";
+    private AplicatieUI.Logica.Memento.Editor _editorState = new();
 
-    private Stack<string> _redoStack = new();
+    private AutoSaveButton _autoSaveCmd;
+    private SaveButton _saveCmd;
+    private UndoButton _undoCmd;
+    private RedoButton _redoCmd;
 
     public DocumentEditorPage()
     {
         InitializeComponent();
+
+        _autoSaveCmd = new AutoSaveButton(_editorState);
+        _saveCmd = new SaveButton(_editorState);
+        _undoCmd = new UndoButton(_editorState);
+        _redoCmd = new RedoButton(_editorState);
     }
 
     public void LoadDocument(Guid shareId, string title, string content, string permission, int version)
     {
-        _shareId = shareId;
-        _currentVersion = version;
-        _lastSavedContent = content;
+        
 
         DocumentTitleLabel.Text = title;
         PermissionLabel.Text = permission;
@@ -32,50 +41,35 @@ public partial class DocumentEditorPage : ContentPage
             RedoButton.IsEnabled = false;
         }
 
-        _redoStack.Clear();
     }
 
+    private void ContentEditor_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        _editorState.Text = ContentEditor.Text;
+
+        _autoSaveCmd.Execute();
+    }
     private async void OnSaveClicked(object? sender, EventArgs e)
     {
-        var content = ContentEditor.Text ?? "";
+        _editorState.Text = ContentEditor.Text;
+        _editorState.DataAndTime = DateTime.Now.ToString();
+        _editorState.NumeDocument = DocumentTitleLabel.Text;
 
-        if (content == _lastSavedContent)
-        {
-            ShowStatus("No changes to save.", "#6B6B80");
-            return;
-        }
-
-        // TODO: inlocuieste cu apelul real la API:
-        // var rezultat = await ApiService.UpdateDocument(_shareId, content, _currentVersion);
-        // PUT /shared-docs/{shareId}
-        // Body: { content, version: _currentVersion }
-        // Daca raspunsul e 409 Conflict → versiunea e in urma, afiseaza eroare
-        // Daca raspunsul e 200 OK → actualizeaza _currentVersion cu versiunea noua din raspuns
-
-        _lastSavedContent = content;
-        _redoStack.Clear();
-
-        ShowStatus("Saved!", "#4CAF50");
+        _saveCmd.Execute();
     }
 
     private void OnUndoClicked(object? sender, EventArgs e)
     {
-        string text = ContentEditor.Text ?? "";
+        _undoCmd.Execute();
 
-        if (string.IsNullOrWhiteSpace(text))
-            return;
-
-        _redoStack.Push(text);
-
-        ContentEditor.Text = RemoveLastWord(text);
+        ContentEditor.Text = _editorState.Text;
     }
 
     private void OnRedoClicked(object? sender, EventArgs e)
     {
-        if (_redoStack.Count == 0)
-            return;
+        _redoCmd.Execute();
 
-        ContentEditor.Text = _redoStack.Pop();
+        ContentEditor.Text = _editorState.Text;
     }
 
     private string RemoveLastWord(string text)
@@ -97,16 +91,7 @@ public partial class DocumentEditorPage : ContentPage
     {
         var content = ContentEditor.Text ?? "";
 
-        if (content != _lastSavedContent)
-        {
-            bool continua = await DisplayAlert(
-                "Unsaved Changes",
-                "You have unsaved changes. Close anyway?",
-                "Close", "Cancel");
-
-            if (!continua)
-                return;
-        }
+        _saveCmd.Execute();
 
         await Shell.Current.GoToAsync("///DocumentListPage");
     }

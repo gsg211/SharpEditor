@@ -1,10 +1,14 @@
+using AplicatieUI.Logica.SignIn_SignUp;
+
 namespace AplicatieUI.UI;
 
 public partial class LoginPage : ContentPage
 {
+    private SignIn _signIn;
     public LoginPage()
     {
         InitializeComponent();
+        _signIn = new SignIn();
     }
 
     private async void OnLoginClicked(object sender, EventArgs e)
@@ -20,15 +24,26 @@ public partial class LoginPage : ContentPage
 
         SetLoading(true);
 
-        // TODO: inlocuieste cu apelul real catre ApiService.Login()
-        await Task.Delay(1000);
 
-        SetLoading(false);
+        bool esteValid = await _signIn.Verificare(UsernameEntry.Text, PasswordEntry.Text);
+        // TODO: inlocuieste cu apelul real catre ApiService.Login()
+        if (esteValid)
+        {
+            SetLoading(false);
+            await Shell.Current.GoToAsync("///DocumentListPage");
+        }
+        else
+        {
+            SetLoading(false);
+            ShowError("User or passord is incorect!");
+            return;
+        }
+        
 
         // TODO: dupa ce primesti JWT-ul, navigheaza catre DocumentListPage:
         
         
-        await Shell.Current.GoToAsync("///DocumentListPage");
+        
 
         
     }

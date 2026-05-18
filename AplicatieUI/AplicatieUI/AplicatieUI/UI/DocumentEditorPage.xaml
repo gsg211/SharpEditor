@@ -95,7 +95,8 @@
                 Margin="12"
                 VerticalOptions="Fill"
                 HorizontalOptions="Fill"
-                AutoSize="Disabled"/>
+                AutoSize="Disabled"
+                TextChanged="ContentEditor_TextChanged"/>
         </Border>
 
         <!-- Mesaj status (salvat, eroare etc) -->

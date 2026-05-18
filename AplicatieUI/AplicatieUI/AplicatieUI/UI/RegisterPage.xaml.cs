@@ -1,10 +1,14 @@
-﻿namespace AplicatieUI.UI;
+﻿using AplicatieUI.Logica.SignIn_SignUp;
+
+namespace AplicatieUI.UI;
 
 public partial class RegisterPage : ContentPage
 {
+    private SignUp _signUp;
     public RegisterPage()
     {
         InitializeComponent();
+        _signUp = new SignUp();
     }
 
     private async void OnRegisterClicked(object sender, EventArgs e)
@@ -37,14 +41,15 @@ public partial class RegisterPage : ContentPage
         SetLoading(true);
 
         // TODO: inlocuieste cu apelul real catre ApiService.Register()
-        await Task.Delay(1000);
+  
 
         SetLoading(false);
+        _signUp.Verificare();
 
         // TODO: dupa inregistrare, naviga catre LoginPage:
-        // await Shell.Current.GoToAsync("//LoginPage");
 
-        ShowSuccess("Account created! (TODO: connect to API)");
+        await Shell.Current.GoToAsync("///DocumentListPage");
+
     }
 
     private async void OnSignInTapped(object sender, TappedEventArgs e)
