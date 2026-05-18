@@ -17,7 +17,15 @@ FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./BackEnd.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
+# --- MODIFICĂM DOAR ETAPA FINALĂ ---
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# Devenim root temporar pentru a configura folderul de date
+USER root
+RUN mkdir -p /app/data && chown -R $APP_UID:$APP_UID /app/data
+
+# Ne întoarcem la utilizatorul securizat implicit al imaginii (.NET app user)
+USER $APP_UID
 ENTRYPOINT ["dotnet", "BackEnd.dll"]

@@ -5,12 +5,16 @@
       context: .
       dockerfile: Dockerfile
     ports:
-     - "5035:8080"
+      - "5035:8080"
     environment:
-     - ASPNETCORE_URLS=http://+:8080
-     - ASPNETCORE_ENVIRONMENT=Development
-     - Jwt__Secret=QUcm7W1aH,iCYFF&>mR^u92SmvJj>^2,
-     - ConnectionStrings__DefaultConnection=Data Source=/app/data/BackEnd.db
+      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Jwt__Secret=QUcm7W1aH,iCYFF&>mR^u92SmvJj>^2,
+      - ConnectionStrings__DefaultConnection=Data Source=/app/data/BackEnd.db
     volumes:
-      # Folderul local "data" din Fedora se leagă direct la "/app/data" din container
-      - ./data:/app/data
+      # Folosim un volum nominal, gestionat 100% automat de Docker
+      - backend_data:/app/data
+
+# Îi declarăm lui Docker că volumul este gestionat intern
+volumes:
+  backend_data:
