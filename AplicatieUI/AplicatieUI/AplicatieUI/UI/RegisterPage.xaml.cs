@@ -18,37 +18,21 @@ public partial class RegisterPage : ContentPage
         var password = PasswordEntry.Text;
         var confirmPassword = ConfirmPasswordEntry.Text;
 
-        // Validare locala
-        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) ||
-            string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
-        {
-            ShowError("Please fill in all fields.");
-            return;
-        }
-
-        if (password != confirmPassword)
-        {
-            ShowError("Passwords do not match.");
-            return;
-        }
-
-        if (password.Length < 6)
-        {
-            ShowError("Password must be at least 6 characters.");
-            return;
-        }
-
         SetLoading(true);
 
-        // TODO: inlocuieste cu apelul real catre ApiService.Register()
-  
+        var rezultat = await _signUp.ExecutaInregistrare(username, email, password);
 
         SetLoading(false);
-        _signUp.Verificare();
 
-        // TODO: dupa inregistrare, naviga catre LoginPage:
-
-        await Shell.Current.GoToAsync("///DocumentListPage");
+        if (rezultat.IsSuccess)
+        {
+            await DisplayAlert("Succes", rezultat.Message, "OK");
+            await Shell.Current.GoToAsync("//LoginPage");
+        }
+        else
+        {
+            ShowError(rezultat.Message);
+        }
 
     }
 

@@ -1,4 +1,5 @@
-﻿using AplicatieUI.Logica.Documente;
+﻿using AplicatieUI.Logica.API;
+using AplicatieUI.Logica.Documente;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,23 +11,20 @@ namespace AplicatieUI.Logica.Command
     internal class DeleteButton : ICommandButton
     {
         private ManagerDocument _manager;
-
+        private readonly ApiService _apiService = new ApiService();
         public Document DocumentToDelete { get; set; }
 
-        public DeleteButton(ManagerDocument manager)
-        {
-            this._manager = manager;
-        }
+        public DeleteButton(ManagerDocument manager) { _manager = manager; }
+
         public async void Execute()
         {
-            string token = "dbasyigdfibcadsadaskiufhas";
+            if (DocumentToDelete == null) return;
 
-            string tokenPrim = await SecureStorage.Default.GetAsync("tekenulMeu");
-            if (DocumentToDelete != null && tokenPrim == token)
+            var result = await _apiService.DeleteDocumentAsync(DocumentToDelete.Id);
+
+            if (result.IsSuccess)
             {
                 _manager.Documents.Remove(DocumentToDelete);
-
-                DocumentToDelete = null;
             }
         }
     }

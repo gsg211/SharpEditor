@@ -1,4 +1,5 @@
-﻿using AplicatieUI.Logica.Command;
+﻿using AplicatieUI.Logica.API;
+using AplicatieUI.Logica.Command;
 using AplicatieUI.Logica.Documente;
 using System.Collections.ObjectModel;
 
@@ -10,42 +11,52 @@ public partial class DocumentListPage : ContentPage
     private Document? _selectedDocument;
     private NewButton _newButton;
     private DeleteButton _deleteButton;
+    private ShareButton _shareButton;
 
-   private ObservableCollection<Document> documente = [];
+
+    private readonly ApiService _apiService = new ApiService();
+
+
+    
+    private ObservableCollection<Document> documente = [];
+
     public DocumentListPage()
     {
         InitializeComponent();
 
-
         _manager = new ManagerDocument(documente);
-
-
-
-        //Inlocuit cu apel API
-        Document doc1 = new Document("d1", "Test1", "All");
-        Document doc2 = new Document("d2", "Test2", "All");
-        Document doc3 = new Document("d3", "Test3", "All");
-
-        documente.Add(doc1);
-        documente.Add(doc2);
-        documente.Add(doc3);
 
         _newButton = new NewButton(_manager);
         _deleteButton = new DeleteButton(_manager);
+        _shareButton = new ShareButton(this);
 
-        LoadDocuments();
+        DocumentsCollection.ItemsSource = documente;
     }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await LoadDocumentsFromServer();
+    }
+
+
+    private async Task LoadDocumentsFromServer()
+    {
+        var docsApi = await _apiService.GetSharedDocsAsync();
+            
+        documente.Clear();
+        foreach (var d in docsApi)
+        {
+            var localDoc = new Document(d.ShareId, d.Title, "", 1, d.Permission);
+            documente.Add(localDoc);
+        }
+
+        SubtitleLabel.Text = $"{documente.Count} documents found";
+    }
+
 
     private void LoadDocuments()
     {
-        // TODO: inlocuieste cu apelul real catre ApiService.GetSharedDocs()
-        // GET /shared-docs
-
-        
-
-
-        
-
         DocumentsCollection.ItemsSource = _manager.Documents;
         SubtitleLabel.Text = $"{documente.Count} manager.Documents";
     }
@@ -56,8 +67,15 @@ public partial class DocumentListPage : ContentPage
 
         // Activeaza/dezactiveaza butoanele in functie de selectie
         bool areSelected = _selectedDocument != null;
+
+        bool isOwner = areSelected && _selectedDocument.Permission == "Owner";
+
+        DeleteButton.IsEnabled = isOwner;
         OpenButton.IsEnabled = areSelected;
 
+
+
+        
         OpenButton.BackgroundColor = areSelected
          ? Color.FromArgb("#4F6EF7")
          : Color.FromArgb("#1A1A2E");
@@ -65,19 +83,38 @@ public partial class DocumentListPage : ContentPage
             ? Colors.White
             : Color.FromArgb("#3A3A5E");
 
-        DeleteButton.IsEnabled = areSelected;
-        DeleteButton.BackgroundColor = areSelected
-            ? Color.FromArgb("#2A1A1A")
-            : Color.FromArgb("#1A1A1A");
-        DeleteButton.TextColor = areSelected
-            ? Color.FromArgb("#FF6B6B")
-            : Color.FromArgb("#4A2A2A");
+        DeleteButton.BackgroundColor = isOwner
+        ? Color.FromArgb("#FF6B6B")
+        : Color.FromArgb("#1A1A1A");
+
+        ShareButton.IsEnabled = isOwner;
+        ShareButton.BackgroundColor = isOwner ? Color.FromArgb("#4CAF50") : Color.FromArgb("#1A1A2E");
+
+        _shareButton.SelectedDocument = _selectedDocument;
+
     }
+
+    private async void OnShareClicked(object sender, EventArgs e)
+    {
+        _shareButton.Execute();
+    }
+
+
+    
+
 
     private async void OnNewDocumentClicked(object sender, EventArgs e)
     {
+        string title = await DisplayPromptAsync("Document Nou", "Introdu titlul documentului:", "Crează", "Anulează");
+
+        if (string.IsNullOrWhiteSpace(title)) return;
+
+        
+        _newButton.TitleToCreate = title;
+
+        
         _newButton.Execute();
-        LoadDocuments();
+
     }
 
 
@@ -85,15 +122,25 @@ public partial class DocumentListPage : ContentPage
     {
         if (_selectedDocument == null) return;
 
-        Guid shar = Guid.Empty;
+       
+        var docComplet = await _apiService.GetSharedDocByIdAsync(_selectedDocument.Id);
 
+      
+
+        if (docComplet == null)
+        {
+            await DisplayAlert("Eroare", "Nu s-a putut încărca conținutul documentului.", "OK");
+            return;
+        }
+
+        // 2. Deschidem editorul cu datele REALE
         var editor = new DocumentEditorPage();
         editor.LoadDocument(
-            shar,
-            _selectedDocument.Titlu,
-            _selectedDocument.Text,
-            "All",
-            1
+            docComplet.ShareId,
+            docComplet.Document.Title,
+            docComplet.Document.Content,
+            docComplet.Permission,
+            docComplet.Document.Version
         );
 
         await Navigation.PushAsync(editor);
@@ -104,24 +151,17 @@ public partial class DocumentListPage : ContentPage
         if (_selectedDocument == null) return;
 
         bool confirmat = await DisplayAlert(
-            "Delete Document",
-            $"Esti sigur ca vrei sa stergi '{_selectedDocument.Titlu}'?",
-            "Delete", "Cancel");
+            "Delete", $"Sigur ștergi '{_selectedDocument.Titlu}'?", "Șterge", "Anulează");
 
         if (!confirmat) return;
 
-        // TODO: apel real catre ApiService.DeleteSharedDoc(_selectedDocument.ShareId)
-        // DELETE /shared-docs/{shareId}
+        _deleteButton.DocumentToDelete = _selectedDocument;
 
-        if (confirmat)
-        {
-            _deleteButton.DocumentToDelete = _selectedDocument;
-            _deleteButton.Execute();
-        }
+        _deleteButton.Execute();
 
-        LoadDocuments();
+        await Task.Delay(500);
+        await LoadDocumentsFromServer(); 
+
         _selectedDocument = null;
-        OpenButton.IsEnabled = false;
-        DeleteButton.IsEnabled = false;
     }
 }

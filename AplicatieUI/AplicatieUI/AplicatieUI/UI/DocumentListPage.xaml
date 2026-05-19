@@ -98,48 +98,61 @@
         </CollectionView>
 
         <!-- Butoane jos -->
+        <!-- Butoane jos -->
         <Grid Grid.Row="2"
-              ColumnDefinitions="*,*,*"
-              ColumnSpacing="10"
-              Margin="0,16,0,0">
+      ColumnDefinitions="*,*,*,*" 
+      ColumnSpacing="8"
+      Margin="0,16,0,0">
 
             <Button
-                Grid.Column="0"
-                x:Name="DeleteButton"
-                Text="Delete"
-                BackgroundColor="#1A1A1A"
-                TextColor="#4A2A2A"
-                FontSize="15"
-                FontAttributes="Bold"
-                CornerRadius="10"
-                HeightRequest="50"
-                IsEnabled="False"
-                Clicked="OnDeleteClicked"/>
+        Grid.Column="0"
+        x:Name="DeleteButton"
+        Text="Del"
+        BackgroundColor="#1A1A1A"
+        TextColor="#4A2A2A"
+        FontSize="14"
+        FontAttributes="Bold"
+        CornerRadius="10"
+        HeightRequest="50"
+        IsEnabled="False"
+        Clicked="OnDeleteClicked"/>
 
             <Button
-                Grid.Column="1"
-                Text="New"
-                BackgroundColor="#1A2A1A"
-                TextColor="#4CAF50"
-                FontSize="15"
-                FontAttributes="Bold"
-                CornerRadius="10"
-                HeightRequest="50"
-                Clicked="OnNewDocumentClicked"/>
+        Grid.Column="1"
+        x:Name="ShareButton"
+        Text="Share"
+        BackgroundColor="#1A1D27"
+        TextColor="#3A3A5E"
+        FontSize="14"
+        FontAttributes="Bold"
+        CornerRadius="10"
+        HeightRequest="50"
+        IsEnabled="False"
+        Clicked="OnShareClicked"/>
 
             <Button
-                Grid.Column="2"
-                x:Name="OpenButton"
-                Text="Open"
-                BackgroundColor="#1A1A2E"
-                TextColor="#3A3A5E"
-                FontSize="15"
-                FontAttributes="Bold"
-                CornerRadius="10"
-                HeightRequest="50"
-                IsEnabled="False"
-                Clicked="OnOpenClicked"/>
+        Grid.Column="2"
+        Text="New"
+        BackgroundColor="#1A2A1A"
+        TextColor="#4CAF50"
+        FontSize="14"
+        FontAttributes="Bold"
+        CornerRadius="10"
+        HeightRequest="50"
+        Clicked="OnNewDocumentClicked"/>
 
+            <Button
+        Grid.Column="3"
+        x:Name="OpenButton"
+        Text="Open"
+        BackgroundColor="#1A1A2E"
+        TextColor="#3A3A5E"
+        FontSize="14"
+        FontAttributes="Bold"
+        CornerRadius="10"
+        HeightRequest="50"
+        IsEnabled="False"
+        Clicked="OnOpenClicked"/>
         </Grid>
 
     </Grid>

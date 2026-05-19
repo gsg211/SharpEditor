@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AplicatieUI.Logica.API;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,21 +9,11 @@ namespace AplicatieUI.Logica.SignIn_SignUp
 {
     class SignIn
     {
-        public async Task<bool> Verificare(string name, string password)
+        private readonly ApiService _apiService = new ApiService();
+
+        public async Task<ApiResult> Verificare(string email, string password)
         {
-            string numeTemp = "a";
-            string par = "a";
-
-            if (name == numeTemp && password == par)
-            {
-                string token = "dbasyigdfibcakiufhas";
-                await SecureStorage.Default.SetAsync("tekenulMeu", token);
-
-                return true;
-            }
-
-
-           return false;
+            return await _apiService.LoginAsync(email, password);
         }
     }
 }

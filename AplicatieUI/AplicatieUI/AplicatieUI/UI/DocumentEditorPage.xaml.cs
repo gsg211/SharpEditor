@@ -9,6 +9,12 @@ public partial class DocumentEditorPage : ContentPage
 {
     private AplicatieUI.Logica.Memento.Editor _editorState = new();
 
+
+    private int _currentShareId;
+    private int _currentVersion;
+
+
+
     private AutoSaveButton _autoSaveCmd;
     private SaveButton _saveCmd;
     private UndoButton _undoCmd;
@@ -19,18 +25,22 @@ public partial class DocumentEditorPage : ContentPage
         InitializeComponent();
 
         _autoSaveCmd = new AutoSaveButton(_editorState);
-        _saveCmd = new SaveButton(_editorState);
+        _saveCmd = new SaveButton(_editorState,_currentShareId,_currentVersion);
         _undoCmd = new UndoButton(_editorState);
         _redoCmd = new RedoButton(_editorState);
     }
 
-    public void LoadDocument(Guid shareId, string title, string content, string permission, int version)
+    public void LoadDocument(int shareId, string title, string content, string permission, int version)
     {
-        
+
+
+        _currentShareId = shareId;
+        _currentVersion = version;
 
         DocumentTitleLabel.Text = title;
-        PermissionLabel.Text = permission;
         ContentEditor.Text = content;
+
+        _saveCmd = new SaveButton(_editorState, _currentShareId, _currentVersion);
 
         if (permission == "ReadOnly")
         {

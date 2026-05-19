@@ -1,4 +1,5 @@
-﻿using AplicatieUI.Logica.Memento;
+﻿using AplicatieUI.Logica.API;
+using AplicatieUI.Logica.Memento;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,24 +12,27 @@ namespace AplicatieUI.Logica.Command
     internal class SaveButton : ICommandButton
     {
         private readonly Memento.Editor _editor;
+        private readonly ApiService _apiService = new ApiService();
+        private readonly int _shareId;
+        private int _version;
 
-        public SaveButton(Memento.Editor editor)
+        public SaveButton(Memento.Editor editor, int shareId, int version)
         {
             _editor = editor;
+            _shareId = shareId;
+            _version = version;
         }
 
-        public void Execute()
+        public async void Execute()
         {
             _editor._undoHistory.Push(_editor.MakeSnapshot());
-            Snapshot uploadSnapshot = _editor._undoHistory.Peek();
-            string text = uploadSnapshot.Text;
-            string dataAndTime = uploadSnapshot.DataAndTime;
-            string numeDocument = uploadSnapshot.NumeDocument;
 
-
-
-            //Apelare metoda incarcare in baza de date
-
+            bool succes = await _apiService.UpdateDocumentAsync(_shareId, _editor.Text, _version);
+            if (succes)
+            {
+                _version++; 
+                Console.WriteLine("Salvat cu succes în cloud!");
+            }
         }
     }
 }
