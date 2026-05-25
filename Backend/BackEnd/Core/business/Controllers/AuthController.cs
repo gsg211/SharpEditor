@@ -1,3 +1,12 @@
+// =============================================================================
+// File:        AuthController.cs
+// Author:      Gorea Sabin Gabriel
+// Description: REST API controller that exposes authentication endpoints
+//              (registration and login). Delegates business logic to
+//              IAuthService and maps service-layer exceptions to the
+//              appropriate HTTP status codes.
+// =============================================================================
+
 using Core.business.DTOs;
 using Core.business.Exceptions;
 using Core.business.Services;
@@ -10,8 +19,10 @@ namespace Core.business.Controllers;
 [Route("auth")]
 public class AuthController : ControllerBase
 {
+    // Service responsible for authentication logic (register / login)
     private readonly IAuthService _auth;
 
+    // Inject IAuthService via constructor
     public AuthController(IAuthService auth) => _auth = auth;
 
     /// <summary>Register a new user.</summary>
@@ -23,11 +34,14 @@ public class AuthController : ControllerBase
     {
         try
         {
+            // Delegate registration to the auth service
             var result = await _auth.RegisterAsync(req);
+
+            // Return 201 Created with the generated auth response (e.g. JWT)
             return StatusCode(StatusCodes.Status201Created, result);
         }
-        catch (ValidationException ex)  { return BadRequest(new { error = ex.Message }); }
-        catch (ConflictException ex)    { return Conflict(new { error = ex.Message }); }
+        catch (ValidationException ex)  { return BadRequest(new { error = ex.Message }); }  // 400 – invalid input
+        catch (ConflictException ex)    { return Conflict(new { error = ex.Message }); }     // 409 – user already exists
     }
 
     /// <summary>Authenticate and receive a JWT.</summary>
@@ -39,10 +53,13 @@ public class AuthController : ControllerBase
     {
         try
         {
+            // Delegate credential verification to the auth service
             var result = await _auth.LoginAsync(req);
+
+            // Return 200 OK with the auth response (e.g. JWT token)
             return Ok(result);
         }
-        catch (ValidationException ex)    { return BadRequest(new { error = ex.Message }); }
-        catch (UnauthorizedException ex)  { return Unauthorized(new { error = ex.Message }); }
+        catch (ValidationException ex)    { return BadRequest(new { error = ex.Message }); }   // 400 – invalid input
+        catch (UnauthorizedException ex)  { return Unauthorized(new { error = ex.Message }); } // 401 – wrong credentials
     }
 }
