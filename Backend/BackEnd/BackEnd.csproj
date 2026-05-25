@@ -25,4 +25,16 @@
     <ItemGroup>
       <Compile Remove="BackEnd.Tests/**" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="business\Controllers\" />
+      <Folder Include="business\DTOs\" />
+      <Folder Include="business\Exceptions\" />
+      <Folder Include="business\interfaces\" />
+      <Folder Include="business\Security\" />
+      <Folder Include="business\Services\" />
+      <Folder Include="Core\obj\Debug\net9.0\" />
+      <Folder Include="Migrations\" />
+      <Folder Include="persistence\entities\" />
+      <Folder Include="persistence\repositories\implementations\" />
+    </ItemGroup>
 </Project>

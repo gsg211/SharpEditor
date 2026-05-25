@@ -1,8 +1,8 @@
-using BackEnd.business.DTOs;
-using BackEnd.business.Exceptions;
-using BackEnd.business.interfaces;
-using BackEnd.business.Services;
-using BackEnd.persistence.entities;
+using Core.business.DTOs;
+using Core.business.Exceptions;
+using Core.business.interfaces;
+using Core.business.Services;
+using Core.persistence.entities;
 using Moq;
 
 namespace BackEnd.Tests;
