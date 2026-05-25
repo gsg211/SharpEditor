@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AplicatieUI.UI.DocumentListPage"
+             Title=""
+             BackgroundColor="#0F1117">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="24,48,24,24">
+
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="0" Margin="0,0,0,24">
+            <Label
+                Text="File Selection"
+                FontSize="28"
+                FontAttributes="Bold"
+                TextColor="#E8E8F0"/>
+            <Label
+                x:Name="SubtitleLabel"
+                Text="0 documents"
+                FontSize="13"
+                TextColor="#6B6B80"
+                Margin="0,4,0,0"/>
+        </VerticalStackLayout>
+
+        <!-- Lista fisiere -->
+        <CollectionView
+            x:Name="DocumentsCollection"
+            Grid.Row="1"
+            SelectionMode="Single"
+            SelectionChanged="OnSelectionChanged">
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Spacing="12">
+                    <Label
+                        Text="No documents yet"
+                        FontSize="16"
+                        TextColor="#6B6B80"
+                        HorizontalOptions="Center"/>
+                    <Label
+                        Text="Tap 'New' to create your first document"
+                        FontSize="13"
+                        TextColor="#4A4A60"
+                        HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border
+                        StrokeShape="RoundRectangle 10"
+                        StrokeThickness="1"
+                        Padding="16,12"
+                        Margin="0,0,0,8">
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="CommonStates">
+                                <VisualState Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="#1A1D27"/>
+                                        <Setter Property="Stroke" Value="#2A2D3E"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="#1E2340"/>
+                                        <Setter Property="Stroke" Value="#4F6EF7"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Grid.Column="0" Spacing="3">
+                                <Label
+                                    Text="{Binding Titlu}"
+                                    FontSize="15"
+                                    FontAttributes="Bold"
+                                    TextColor="#E8E8F0"/>
+                                <Label
+                                    Text="{Binding DataAndTime}"
+                                    FontSize="12"
+                                    TextColor="#6B6B80"/>
+                            </VerticalStackLayout>
+                            <Label
+                                Grid.Column="1"
+                                Text="{Binding Permission}"
+                                FontSize="11"
+                                TextColor="#4F6EF7"
+                                VerticalOptions="Center"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+        <!-- Butoane jos -->
+        <!-- Butoane jos -->
+        <Grid Grid.Row="2"
+      ColumnDefinitions="*,*,*,*" 
+      ColumnSpacing="8"
+      Margin="0,16,0,0">
+
+            <Button
+        Grid.Column="0"
+        x:Name="DeleteButton"
+        Text="Del"
+        BackgroundColor="#1A1A1A"
+        TextColor="#4A2A2A"
+        FontSize="14"
+        FontAttributes="Bold"
+        CornerRadius="10"
+        HeightRequest="50"
+        IsEnabled="False"
+        Clicked="OnDeleteClicked"/>
+
+            <Button
+        Grid.Column="1"
+        x:Name="ShareButton"
+        Text="Share"
+        BackgroundColor="#1A1D27"
+        TextColor="#3A3A5E"
+        FontSize="14"
+        FontAttributes="Bold"
+        CornerRadius="10"
+        HeightRequest="50"
+        IsEnabled="False"
+        Clicked="OnShareClicked"/>
+
+            <Button
+        Grid.Column="2"
+        Text="New"
+        BackgroundColor="#1A2A1A"
+        TextColor="#4CAF50"
+        FontSize="14"
+        FontAttributes="Bold"
+        CornerRadius="10"
+        HeightRequest="50"
+        Clicked="OnNewDocumentClicked"/>
+
+            <Button
+        Grid.Column="3"
+        x:Name="OpenButton"
+        Text="Open"
+        BackgroundColor="#1A1A2E"
+        TextColor="#3A3A5E"
+        FontSize="14"
+        FontAttributes="Bold"
+        CornerRadius="10"
+        HeightRequest="50"
+        IsEnabled="False"
+        Clicked="OnOpenClicked"/>
+        </Grid>
+
+    </Grid>
+
+</ContentPage>
