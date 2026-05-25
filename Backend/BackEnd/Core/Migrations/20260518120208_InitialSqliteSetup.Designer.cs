@@ -3,6 +3,9 @@
 #nullable disable
 
 using Core.persistence;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Core.Migrations
 {

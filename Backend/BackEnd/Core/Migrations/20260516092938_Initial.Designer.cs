@@ -3,10 +3,12 @@
 #nullable disable
 
 using Core.persistence;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Core.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [Microsoft.EntityFrameworkCore.Infrastructure.DbContextAttribute(typeof(AppDbContext))]
     [Migration("20260516092938_Initial")]
     partial class Initial
     {
