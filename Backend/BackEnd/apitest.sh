@@ -1,6 +1,6 @@
 #!/bin/bash
 
-API_URL="http://localhost:5035"
+API_URL="https://gsgpi.barred-sunfish.ts.net"
 
 echo "========================================"
 echo "    TEST BACKEND - Document Editor API   "
