@@ -72,4 +72,14 @@ public partial class LoginPage : ContentPage
         LoadingIndicator.IsVisible = isLoading;
         ErrorLabel.IsVisible = false;
     }
+
+    private void OnHelpClicked(object sender, EventArgs e)
+    {
+        var helpPath = Path.Combine(AppContext.BaseDirectory, "SharpEditorHelp.chm");
+        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+        {
+            FileName = helpPath,
+            UseShellExecute = true
+        });
+    }
 }

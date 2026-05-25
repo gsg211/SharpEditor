@@ -4,8 +4,8 @@
              x:Class="AplicatieUI.UI.LoginPage"
              Title=""
              BackgroundColor="#0F1117">
-
-    <ScrollView>
+    <Grid>
+        <ScrollView>
         <VerticalStackLayout
             Padding="32,60,32,32"
             Spacing="0"
@@ -139,5 +139,17 @@
 
         </VerticalStackLayout>
     </ScrollView>
-
+        <Button
+        Text="Help"
+        BackgroundColor="Transparent"
+        TextColor="#6B6B80"
+        FontSize="13"
+        CornerRadius="8"
+        HeightRequest="36"
+        WidthRequest="60"
+        HorizontalOptions="End"
+        VerticalOptions="Start"
+        Margin="0,12,12,0"
+        Clicked="OnHelpClicked"/>
+ </Grid>
 </ContentPage>
