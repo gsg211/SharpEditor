@@ -1,4 +1,12 @@
-﻿using System;
+﻿/* 
+ * Author: Lionte Eduard-Iulian
+ * Description:
+ * Implements the Command pattern for the auto-save functionality within the undo system. 
+ * Each execution triggers a snapshot of the current editor state and pushes it 
+ * onto the Undo history stack, allowing the application to track text changes in real-time.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +25,7 @@ namespace AplicatieUI.Logica.Command
 
         public void Execute()
         {
-            _editor._undoHistory.Push(_editor.MakeSnapshot());
+            _editor.UndoHistory.Push(_editor.MakeSnapshot());
         }
     }
 }

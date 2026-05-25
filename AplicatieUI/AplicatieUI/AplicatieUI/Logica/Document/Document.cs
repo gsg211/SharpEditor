@@ -1,4 +1,14 @@
-﻿using System;
+﻿/* 
+ * Author: Lionte Eduard-Iulian
+ * Description:
+ * A core model class representing a document. 
+ * It stores essential metadata such as the ID, title, text content, version number, 
+ * and user permissions, serving as the primary data structure for 
+ * passing information between the API and the UI.
+ */
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,17 +26,9 @@ namespace AplicatieUI.Logica.Documente
         public string Permission { get; set; }
 
 
-        
-        //public Document(string titlu, string text, string permission)
-        //{
-        //    Id = Guid.NewGuid();
-        //    Titlu = titlu;
-        //    Text = text;
-        //    DataAndTime = DateTime.Now.ToString();
-        //    Version = 1;
-        //    Permission = permission;
-        //}
-
+        /// <summary>
+        /// Initializes a new instance of the Document class.
+        /// </summary>
         public Document(int id, string titlu, string text, int version, string permission)
         {
             Id = id;

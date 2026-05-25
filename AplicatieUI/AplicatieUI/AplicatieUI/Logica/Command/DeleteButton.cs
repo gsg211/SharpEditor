@@ -1,4 +1,13 @@
-﻿using AplicatieUI.Logica.API;
+﻿/* 
+ * Author: Lionte Eduard-Iulian
+ * Description:
+ * Implements the Command pattern for deleting a document. 
+ * It communicates with the API to remove the file from the server and, upon success, 
+ * updates the local collection by removing the document from the ManagerDocument list.
+ */
+
+
+using AplicatieUI.Logica.API;
 using AplicatieUI.Logica.Documente;
 using System;
 using System.Collections.Generic;

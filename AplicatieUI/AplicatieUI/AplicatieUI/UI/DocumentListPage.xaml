@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
+
+<!-- Author: Miron Victor -->
+<!-- 
+    File explorer page displaying a list of documents with titles, dates, and access levels. 
+    Features an empty state view and a bottom menu for quick actions like 
+    creating, opening, sharing, and deleting files.
+-->
+    
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AplicatieUI.UI.DocumentListPage"

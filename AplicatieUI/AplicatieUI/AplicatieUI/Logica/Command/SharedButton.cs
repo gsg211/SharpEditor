@@ -1,4 +1,14 @@
-﻿using AplicatieUI.Logica.API;
+﻿/* 
+ * Author: Lionte Eduard-Iulian
+ * Description:
+ * Implements the Command pattern for document sharing and access management. 
+ * It allows the owner to manage collaborator permissions through interactive UI prompts, 
+ * enabling them to add new users with specific access levels (ReadOnly/ReadWrite) 
+ * or revoke existing access, all while synchronizing with the backend API.
+ */
+
+
+using AplicatieUI.Logica.API;
 using AplicatieUI.Logica.Documente;
 using System;
 using System.Collections.Generic;
