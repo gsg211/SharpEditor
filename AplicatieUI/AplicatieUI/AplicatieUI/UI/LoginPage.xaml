@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
+
+<!-- Author: Miron Victor -->
+<!-- 
+    A simple dark-themed login screen with a central card for user credentials. 
+    It features the app branding, username and password fields, 
+    a main Sign In button, and quick links for registration and help.
+-->
+
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AplicatieUI.UI.LoginPage"

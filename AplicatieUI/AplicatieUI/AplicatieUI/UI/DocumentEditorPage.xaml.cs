@@ -1,4 +1,13 @@
-﻿using AplicatieUI.Logica.Command;
+﻿/* 
+ * Author: Miron Victor
+ * Description:
+ * Logic for the document editor implementing Command and Memento patterns. 
+ * It handles document loading, user permissions (ReadOnly mode), and history navigation. 
+ * It also triggers auto-save on every text change and ensures the document 
+ * is saved before navigating back to the list.
+ */
+
+using AplicatieUI.Logica.Command;
 using AplicatieUI.Logica.Memento;
 using System;
 using System.Data;
@@ -30,6 +39,11 @@ public partial class DocumentEditorPage : ContentPage
         _redoCmd = new RedoButton(_editorState);
     }
 
+
+
+    /// <summary>
+    /// Populates the editor with document data and configures access rights (Read-Only vs Full Edit).
+    /// </summary>
     public void LoadDocument(int shareId, string title, string content, string permission, int version)
     {
 
@@ -53,12 +67,24 @@ public partial class DocumentEditorPage : ContentPage
 
     }
 
+
+
+    /// <summary>
+    /// Monitors text changes and automatically triggers a snapshot for the Undo history.
+    /// </summary>
     private void ContentEditor_TextChanged(object sender, TextChangedEventArgs e)
     {
         _editorState.Text = ContentEditor.Text;
 
         _autoSaveCmd.Execute();
     }
+
+
+
+
+    /// <summary>
+    /// Manually saves the current document state to the cloud and updates metadata.
+    /// </summary>
     private async void OnSaveClicked(object? sender, EventArgs e)
     {
         _editorState.Text = ContentEditor.Text;
@@ -68,6 +94,12 @@ public partial class DocumentEditorPage : ContentPage
         _saveCmd.Execute();
     }
 
+
+
+
+    /// <summary>
+    /// Executes the undo command and updates the editor text.
+    /// </summary>
     private void OnUndoClicked(object? sender, EventArgs e)
     {
         _undoCmd.Execute();
@@ -75,6 +107,10 @@ public partial class DocumentEditorPage : ContentPage
         ContentEditor.Text = _editorState.Text;
     }
 
+
+    /// <summary>
+    /// Executes the redo command and updates the editor text.
+    /// </summary>
     private void OnRedoClicked(object? sender, EventArgs e)
     {
         _redoCmd.Execute();
@@ -82,21 +118,10 @@ public partial class DocumentEditorPage : ContentPage
         ContentEditor.Text = _editorState.Text;
     }
 
-    private string RemoveLastWord(string text)
-    {
-        text = text.TrimEnd();
 
-        if (text.Length == 0)
-            return "";
-
-        int lastSpace = text.LastIndexOf(' ');
-
-        if (lastSpace == -1)
-            return "";
-
-        return text.Substring(0, lastSpace + 1);
-    }
-
+    /// <summary>
+    /// Performs a final save of the current work and navigates back to the document list.
+    /// </summary>
     private async void OnCloseClicked(object? sender, EventArgs e)
     {
         var content = ContentEditor.Text ?? "";
@@ -104,16 +129,5 @@ public partial class DocumentEditorPage : ContentPage
         _saveCmd.Execute();
 
         await Shell.Current.GoToAsync("///DocumentListPage");
-    }
-
-    private async void ShowStatus(string message, string culoare)
-    {
-        StatusLabel.Text = message;
-        StatusLabel.TextColor = Color.FromArgb(culoare);
-        StatusLabel.IsVisible = true;
-
-        await Task.Delay(3000);
-
-        StatusLabel.IsVisible = false;
     }
 }

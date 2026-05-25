@@ -1,4 +1,14 @@
-﻿using AplicatieUI.Logica.API;
+﻿/* 
+ * Author: Lionte Eduard-Iulian
+ * Description:
+ * Implements the Command pattern for creating a new document. 
+ * It sends a creation request to the API and, upon receiving a successful response, 
+ * maps the data into a local Document instance and adds it to the manager's collection 
+ * to refresh the UI list.
+ */
+
+
+using AplicatieUI.Logica.API;
 using AplicatieUI.Logica.Documente;
 using System;
 using System.Collections.Generic;

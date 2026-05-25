@@ -1,4 +1,14 @@
-﻿using AplicatieUI.Logica.API;
+﻿/* 
+ * Author: Lionte Eduard-Iulian
+ * Description:
+ * Implements the Command pattern for saving the document to the database. 
+ * It pushes the current editor state to the Undo history and calls the ApiService 
+ * to update the document content on the server, while also handling version 
+ * increments upon a successful update.
+ */
+
+
+using AplicatieUI.Logica.API;
 using AplicatieUI.Logica.Memento;
 using System;
 using System.Collections.Generic;
@@ -25,7 +35,7 @@ namespace AplicatieUI.Logica.Command
 
         public async void Execute()
         {
-            _editor._undoHistory.Push(_editor.MakeSnapshot());
+            _editor.UndoHistory.Push(_editor.MakeSnapshot());
 
             bool succes = await _apiService.UpdateDocumentAsync(_shareId, _editor.Text, _version);
             if (succes)

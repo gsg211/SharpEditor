@@ -1,4 +1,15 @@
-﻿using System;
+﻿/* 
+ * Author: Lionte Eduard-Iulian
+ * Description:
+ * This is the primary communication engine of the app, responsible for all HTTP interactions with the backend. 
+ * It centralizes user authentication by managing JWT tokens securely via SecureStorage and 
+ * handles the full lifecycle of documents through CRUD operations (Create, Read, Update, Delete). 
+ * The service also maps backend HTTP status codes to user-friendly messages and manages 
+ * the collaboration system, including file sharing, permission levels, and access revocation.
+ */
+
+
+using System;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -45,11 +56,19 @@ namespace AplicatieUI.Logica.API
         private readonly HttpClient _httpClient;
         private const string BaseUrl = "https://gsgpi.barred-sunfish.ts.net";
 
+
+        /// <summary>
+        /// Initializes the HttpClient with the backend base address.
+        /// </summary>
         public ApiService()
         {
             _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
         }
 
+
+        /// <summary>
+        /// Authenticates the user and stores the JWT token in secure storage.
+        /// </summary>
         public async Task<ApiResult> LoginAsync(string email, string password)
         {
             try
@@ -79,6 +98,11 @@ namespace AplicatieUI.Logica.API
             }
         }
 
+
+
+        /// <summary>
+        /// Registers a new user account on the server.
+        /// </summary>
         public async Task<ApiResult> RegisterAsync(string username, string email, string password)
         {
             try
@@ -102,6 +126,10 @@ namespace AplicatieUI.Logica.API
         }
 
 
+
+        /// <summary>
+        /// Attaches the stored JWT token to the HTTP request headers.
+        /// </summary>
         private async Task SetAuthHeader()
         {
             var token = await SecureStorage.Default.GetAsync("jwt_token");
@@ -115,6 +143,11 @@ namespace AplicatieUI.Logica.API
             }
         }
 
+
+
+        /// <summary>
+        /// Retrieves all documents shared with the current user.
+        /// </summary>
         public async Task<List<SharedDocumentDto>> GetSharedDocsAsync()
         {
             try
@@ -125,6 +158,11 @@ namespace AplicatieUI.Logica.API
             catch { return new List<SharedDocumentDto>(); }
         }
 
+
+
+        /// <summary>
+        /// Creates a new document and returns its details.
+        /// </summary>
         public async Task<SharedDocumentDto> CreateDocumentAsync(string title, string content)
         {
             try
@@ -144,6 +182,11 @@ namespace AplicatieUI.Logica.API
             return null;
         }
 
+
+
+        /// <summary>
+        /// Updates the content and version of an existing document.
+        /// </summary>
         public async Task<bool> UpdateDocumentAsync(int shareId, string content, int version)
         {
             await SetAuthHeader();
@@ -151,6 +194,11 @@ namespace AplicatieUI.Logica.API
             return response.IsSuccessStatusCode;
         }
 
+
+
+        /// <summary>
+        /// Deletes a document from the server.
+        /// </summary>
         public async Task<ApiResult> DeleteDocumentAsync(int shareId)
         {
             await SetAuthHeader();
@@ -165,6 +213,11 @@ namespace AplicatieUI.Logica.API
             return new ApiResult { IsSuccess = false, Message = "Eroare la stergere." };
         }
 
+
+
+        /// <summary>
+        /// Fetches a single document's full details by its ID.
+        /// </summary>
         public async Task<SharedDocumentDto> GetSharedDocByIdAsync(int shareId)
         {
             await SetAuthHeader();
@@ -175,13 +228,16 @@ namespace AplicatieUI.Logica.API
             catch { return null; }
         }
 
-       
+
+
+        /// <summary>
+        /// Grants another user access to a specific document.
+        /// </summary>
         public async Task<ApiResult> ShareDocumentAsync(int shareId, int targetUserId, string permission)
         {
             try
             {
                 await SetAuthHeader();
-                // Endpoint: POST /shared-docs/{shareId}/shares
                 var response = await _httpClient.PostAsJsonAsync($"/shared-docs/{shareId}/shares", new
                 {
                     userId = targetUserId,
@@ -202,6 +258,9 @@ namespace AplicatieUI.Logica.API
             }
         }
 
+        /// <summary>
+        /// Retrieves the raw sharing data for a document.
+        /// </summary>
         public async Task<string> GetSharesAsync(int shareId)
         {
             await SetAuthHeader();
@@ -210,6 +269,9 @@ namespace AplicatieUI.Logica.API
         }
 
 
+        /// <summary>
+        /// Gets a list of all users who have access to a document.
+        /// </summary>
         public async Task<List<ShareDetailDto>> GetDocumentSharesAsync(int shareId)
         {
             try
@@ -220,7 +282,11 @@ namespace AplicatieUI.Logica.API
             catch { return null; }
         }
 
-        
+
+
+        /// <summary>
+        /// Removes a specific user's access to a document.
+        /// </summary>
         public async Task<bool> RevokeShareAsync(int shareId, int userId)
         {
             try
